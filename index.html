@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child's First 5 Years Budget - Thailand Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .income-selector {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+        }
+        
+        .income-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .income-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .income-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .income-card.selected {
+            border-color: #4CAF50;
+            background: #f1f8e9;
+        }
+        
+        .income-card.poor {
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .income-card.middle {
+            border-left: 5px solid #feca57;
+        }
+        
+        .income-card.wealthy {
+            border-left: 5px solid #48dbfb;
+        }
+        
+        .income-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .income-details {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        .budget-section {
+            padding: 30px;
+        }
+        
+        .year-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .year-tab {
+            background: #e9ecef;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .year-tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .year-tab:hover {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .year-content {
+            display: none;
+        }
+        
+        .year-content.active {
+            display: block;
+        }
+        
+        .budget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .category {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border-top: 4px solid #4CAF50;
+        }
+        
+        .category h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .item label {
+            flex: 1;
+            min-width: 150px;
+            font-size: 14px;
+        }
+        
+        .item input {
+            width: 100px;
+            padding: 8px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 14px;
+        }
+        
+        .item input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .total-section {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .total-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .total-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .total-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .total-item .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .five-year-summary {
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .events-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .event-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .event-button {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .event-button:hover {
+            background: #ffca2c;
+            transform: translateY(-2px);
+        }
+        
+        .event-button.danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .event-button.danger:hover {
+            background: #c82333;
+        }
+        
+        .event-display {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            min-height: 80px;
+            border: 2px dashed #ffc107;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .event-history {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .event-history h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .event-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            border-left: 3px solid #007bff;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .event-item.negative {
+            border-left-color: #dc3545;
+        }
+        
+        .event-item.positive {
+            border-left-color: #28a745;
+        }
+        
+        .currency {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .age-indicator {
+            background: #007bff;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .budget-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .income-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .year-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👶 Child's First 5 Years Budget Challenge</h1>
+            <p>Experience the real costs and challenges of raising a child in Bangkok, Thailand (Ages 0-5)</p>
+        </div>
+        
+        <div class="income-selector">
+            <h2>Step 1: Choose Your Starting Income Level</h2>
+            <p>Select one of the three income scenarios below. Remember: life events might change your situation!</p>
+            
+            <div class="income-cards">
+                <div class="income-card poor" onclick="selectIncome('poor')">
+                    <h3>💰 Low Income Family</h3>
+                    <div class="income-details">
+                        <p><strong>Monthly Income:</strong> <span class="currency">฿9,300</span></p>
+                        <p><strong>Job:</strong> Minimum wage worker (factory, restaurant)</p>
+                        <p><strong>Take-home after taxes:</strong> <span class="currency">฿8,600</span></p>
+                        <p><strong>Reality:</strong> Based on <span class="currency">฿372/day</span> minimum wage in Bangkok</p>
+                    </div>
+                </div>
+                
+                <div class="income-card middle" onclick="selectIncome('middle')">
+                    <h3>🏠 Middle Class Family</h3>
+                    <div class="income-details">
+                        <p><strong>Monthly Income:</strong> <span class="currency">฿35,000</span></p>
+                        <p><strong>Job:</strong> Office worker, teacher, nurse</p>
+                        <p><strong>Take-home after taxes:</strong> <span class="currency">฿30,500</span></p>
+                        <p><strong>Reality:</strong> Typical professional salary in Bangkok</p>
+                    </div>
+                </div>
+                
+                <div class="income-card wealthy" onclick="selectIncome('wealthy')">
+                    <h3>💎 High Income Family</h3>
+                    <div class="income-details">
+                        <p><strong>Monthly Income:</strong> <span class="currency">฿80,000</span></p>
+                        <p><strong>Job:</strong> Manager, doctor, lawyer, expat</p>
+                        <p><strong>Take-home after taxes:</strong> <span class="currency">฿68,000</span></p>
+                        <p><strong>Reality:</strong> Upper middle class Bangkok lifestyle</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="budget-section hidden" id="budgetSection">
+            <h2>Step 2: Plan Your 5-Year Child Budget</h2>
+            <p><strong>🔍 Research Instructions:</strong> Visit <a href="https://www.lotuss.com/en" target="_blank" style="color: #4CAF50; font-weight: bold; text-decoration: none;">Lotus's Official Website</a> to find real prices for all child items. Use only Lotus as your source!</p>
+            
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4CAF50;">
+                <strong>🛒 How to use Lotus's website:</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Go to <strong>www.lotuss.com/en</strong></li>
+                    <li>Search for baby & kids products using the search bar</li>
+                    <li>Check categories like "Baby & Kids" or "Health & Beauty"</li>
+                    <li>Record actual prices from their current listings</li>
+                    <li>Consider how needs change as child grows!</li>
+                </ul>
+            </div>
+            
+            <div class="year-tabs">
+                <button class="year-tab active" onclick="showYear('year0')">👶 Year 0-1</button>
+                <button class="year-tab" onclick="showYear('year1')">🚼 Year 1-2</button>
+                <button class="year-tab" onclick="showYear('year2')">🧒 Year 2-3</button>
+                <button class="year-tab" onclick="showYear('year3')">👦 Year 3-4</button>
+                <button class="year-tab" onclick="showYear('year4')">🎒 Year 4-5</button>
+            </div>
+            
+            <div class="year-content active" id="year0">
+                <h3>👶 Year 0-1: Baby Stage <span class="age-indicator">0-12 months</span></h3>
+                <div class="budget-grid">
+                    <div class="category">
+                        <h3>🍼 Baby Equipment & Setup</h3>
+                        <div class="item">
+                            <label>Crib & Mattress</label>
+                            <input type="number" id="crib_y0" placeholder="Search 'baby crib'" oninput="calculateTotals()"> ฿
+                        </div>
+                        <div class="item">
+                            <label>Car Seat (Infant)</label>
+                            <input type="number" id="carseat_y0" placeholder="Search 'infant car seat'" oninput="calculateTotals()"> ฿
+                        </div>
+                        <div class="item">
+                            <label>Stroller</label>
+                            <input type="number" id="stroller_y0" placeholder="Search 'baby stroller'" oninput="calculateTotals()"> ฿
+                        </div>
+                        <div class="item">
+                            <label>Baby Monitor</label>
+                            <input type="number" id="monitor_y0" placeholder="Search 'baby monitor'" oninput="calculateTotals()"> ฿
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <h3>🍼 Monthly Baby Needs</h3>
+                        <div class="item">
+                            <label>Diapers</label>
+                            <input type="number" id="diapers_y0" placeholder="Search 'baby diapers'" oninput="calculateTotals()"> ฿/month
+                        </div>
+                        <div class="item">
+                            <label>Formula/Baby Food</label>
+                            <input type="number" id="food_y0" placeholder="Search 'baby formula'" oninput="calculateTotals()"> ฿/month
+                        </div>
+                        <div class="item">
+                            <label>Baby Clothes</label>
+                            <input type="number" id="clothes_y0" placeholder="Search 'baby clothes'" oninput="calculateTotals()"> ฿/month
+                        </div>
+                        <div class="item">
+                            <label>Baby Care Products</label>
+                            <input type="number" id="care_y0" placeholder="Search 'baby soap'" oninput="calculateTotals()"> ฿/month
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <h3>🏥 Medical & Childcare</h3>
+                        <div class="item">
+                            <label>Hospital Delivery</label>
+                            <input type="number" id="delivery_y0" placeholder="50000" oninput="calculateTotals()"> ฿
+                        </div>
+                        <div class="item">
+                            <label>Health Insurance</label>
+                            <input type="number" id="insurance_y0" placeholder="3000" oninput="calculateTotals()"> ฿/month
+                        </div>
+                        <div class="item">
+                            <label>Checkups & Vaccines</label>
+                            <input type="number" id="medical_y0" placeholder="2000" oninput="calculateTotals()"> ฿/month
+                        </div>
+                        <div class="item">
+                            <label>Childcare/Nanny</label>
+                            <input type="number" id="childcare_y0
