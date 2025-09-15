@@ -14,7 +14,7 @@
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            min-height: 10vh;
             padding: 20px;
         }
         
@@ -379,7 +379,7 @@
             <p>Experience the real costs and challenges of raising a child in Bangkok, Thailand (Ages 0-5)</p>
         </div>
         
-        <div class="income-selector">
+        <div class="income-selector" id="incomeSelector">
             <h2>Step 1: Choose Your Starting Income Level</h2>
             <p>Select one of the three income scenarios below. Remember: life events might change your situation!</p>
             
@@ -416,7 +416,7 @@
             </div>
         </div>
         
-        <div class="budget-section hidden" id="budgetSection">
+        <div class="budget-section hidden" id="budgetPlanner">
             <h2>Step 2: Plan Your 5-Year Child Budget</h2>
             <p><strong>🔍 Research Instructions:</strong> Visit <a href="https://www.lotuss.com/en" target="_blank" style="color: #4CAF50; font-weight: bold; text-decoration: none;">Lotus's Official Website</a> to find real prices for all child items. Use only Lotus as your source!</p>
             
@@ -498,4 +498,47 @@
                         </div>
                         <div class="item">
                             <label>Childcare/Nanny</label>
-                            <input type="number" id="childcare_y0
+                            <input type="number" id="childcare_y0" placeholder="10000" oninput="calculateTotals()"> ฿/month
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const incomeAmounts = {
+            'poor': {
+                monthly: 9300,
+                afterTaxes: 8600
+            },
+            'middle': {
+                monthly: 35000,
+                afterTaxes: 30500
+            },
+            'wealthy': {
+                monthly: 80000,
+                afterTaxes: 68000
+            }
+        };
+
+        const fiveYearConstants = {
+            'low-income': 400000,
+            'middle-class': 1000000,
+            'high-income': 2000000
+        };
+
+        let selectedIncome = 0;
+        let fiveYearExpenses = 0;
+
+        function selectIncome(level) {
+            const incomeData = incomeAmounts[level];
+            selectedIncome = incomeData.afterTaxes;
+
+            document.getElementById('monthlyIncome').textContent = `฿${incomeData.afterTaxes.toLocaleString()}`;
+            document.getElementById('fiveYearIncome').textContent = `฿${(incomeData.afterTaxes * 12 * 5).toLocaleString()}`;
+            
+            const cards = document.querySelectorAll('.income-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            document.querySelector(`.income-card.${level}`).classList.add('selected');
+
+            document.getElementById('incomeSelector').
